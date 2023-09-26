@@ -16,8 +16,11 @@ Including another URLconf
 """
 from django.urls import path, include
 from .views import ImageAPIView
+from .views import LinkView
 
+app_name = 'accounts'
 urlpatterns = [
-    path('', include('rest_framework.urls')),
-    path('image/', ImageAPIView.as_view()),
+    path('image/', ImageAPIView.as_view(), name='image'),
+    path('link/', LinkView.as_view(), name='link'),
+    path('link/<str:file>/', LinkView.as_view(), name='link'),
 ]

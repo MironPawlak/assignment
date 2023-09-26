@@ -8,7 +8,7 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from django.urls import reverse
-from .serializers import ImageSerializer
+from .serializers import ImageSerializer, ExpiringLinkSerializer, ExpiringLinkDataSerializer
 from .models import OriginalImage, ImageVersion, ExpiringLink
 from .permissions import OwnImagePermission, AccountTierPermission, ExpiringLinkPermissionOrReadOnly
 from django.utils.crypto import get_random_string
@@ -35,25 +35,26 @@ class ProtectedImageView(generics.GenericAPIView):
             raise Http404
 
 
-class LinkView(APIView):
+class LinkView(generics.GenericAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly, ExpiringLinkPermissionOrReadOnly]
+    serializer_class = ExpiringLinkDataSerializer
 
-    def post(self, request, file, seconds='None'):
-        image = OriginalImage.objects.filter(file=file).first() or ImageVersion.objects.filter(
-            file=file).first()
-        if not image or not seconds:
-            raise Http404
-
-        link = get_random_string(20)
-        expiring = timezone.now() + datetime.timedelta(seconds=int(seconds))
-        instance = ExpiringLink(file=file, link=link, expiring=expiring)
-        instance.save()
+    def post(self, request, file='None'):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
         data = {
-            'link': request.build_absolute_uri(reverse('link', kwargs={"file": link}))
+            'file': serializer.validated_data['file'],
+            'link': get_random_string(20),
+            'expiring': timezone.now() + datetime.timedelta(seconds=serializer.validated_data['seconds'])
         }
-        return Response(data)
+        serializer_save = ExpiringLinkSerializer(data=data)
+        serializer_save.is_valid(raise_exception=True)
+        serializer_save.save()
+        return Response(
+            {'link': request.build_absolute_uri(reverse('accounts:link',
+                                                        kwargs={"file": serializer_save.validated_data['link']}))})
 
-    def get(self, request, file, seconds='None'):
+    def get(self, request, file='None'):
         link = ExpiringLink.objects.filter(link=file).first()
         if not link:
             raise Http404

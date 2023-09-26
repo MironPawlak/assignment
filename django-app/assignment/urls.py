@@ -1,4 +1,4 @@
-"""assignment URL Configuration
+"""assignment URL  Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.0/topics/http/urls/
@@ -13,16 +13,13 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
-from accounts.views import ProtectedImageView, LinkView
-from django.conf.urls.static import static
+from accounts.views import ProtectedImageView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/', include('accounts.urls')),
+    path('auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('accounts/', include('accounts.urls', namespace='accounts')),
     path('media/<str:file>/', ProtectedImageView.as_view(), name='protected_image'),
-    path('link/<str:file>/', LinkView.as_view(), name='link'),
-    path('link/<str:file>/<int:seconds>/', LinkView.as_view(), name='link')
 ]

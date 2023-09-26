@@ -1,8 +1,11 @@
 from django.core.files.images import ImageFile
+from django.utils.crypto import get_random_string
 from rest_framework import serializers
-from .models import OriginalImage, ImageVersion
+from .models import OriginalImage, ImageVersion, ExpiringLink
+from django.utils import timezone
 from PIL import Image
 import io
+import datetime
 
 
 class ImageVersionSerializer(serializers.ModelSerializer):
@@ -39,3 +42,18 @@ class ImageSerializer(serializers.ModelSerializer):
             data.pop('file')
         return data
 
+
+class ExpiringLinkDataSerializer(serializers.Serializer):
+    seconds = serializers.IntegerField()
+    file = serializers.CharField()
+
+    def validate_seconds(self, value):
+        if 300 <= value <= 30000:
+            return value
+        raise serializers.ValidationError("Seconds must be between 300 and 30000")
+
+
+class ExpiringLinkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ExpiringLink
+        fields = '__all__'

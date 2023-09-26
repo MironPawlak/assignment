@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'accounts',
     # External
     'rest_framework',
-    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -143,6 +142,3 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-
-# Django superuser configuration
-# https://docs.djangoproject.com/en/4.2/ref/django-admin/#django-admin-createsuperuser
