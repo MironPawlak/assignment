@@ -1,6 +1,4 @@
 from django.contrib import admin
-
-# Register your models here.
 from .models import AccountTier, CustomUser, OriginalImage, ExpiringLink, ThumbnailSizes, ImageVersion
 
 admin.site.register(AccountTier)

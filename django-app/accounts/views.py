@@ -1,18 +1,18 @@
-# Create your views here.
-import os, datetime
+import datetime
+import os
 
-from rest_framework.views import APIView
 from django.conf import settings
 from django.http import HttpResponse, Http404
+from django.urls import reverse
+from django.utils import timezone
+from django.utils.crypto import get_random_string
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
-from django.urls import reverse
-from .serializers import ImageSerializer, ExpiringLinkSerializer, ExpiringLinkDataSerializer
-from .models import OriginalImage, ImageVersion, ExpiringLink
+
+from .models import OriginalImage, ExpiringLink
 from .permissions import OwnImagePermission, AccountTierPermission, ExpiringLinkPermissionOrReadOnly
-from django.utils.crypto import get_random_string
-from django.utils import timezone
+from .serializers import ImageSerializer, ExpiringLinkSerializer, ExpiringLinkDataSerializer
 
 
 class ImageAPIView(generics.ListCreateAPIView):
@@ -67,4 +67,3 @@ class LinkView(generics.GenericAPIView):
                 return HttpResponse(file.read(), content_type="image/jpeg")
         except OSError:
             raise Http404
-

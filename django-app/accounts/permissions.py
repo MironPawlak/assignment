@@ -1,5 +1,5 @@
 from rest_framework import permissions
-from .models import OriginalImage, AccountTier, ImageVersion
+from .models import OriginalImage, ImageVersion
 
 
 class OwnImagePermission(permissions.BasePermission):
@@ -8,7 +8,8 @@ class OwnImagePermission(permissions.BasePermission):
     """
 
     def has_permission(self, request, view):
-        image = OriginalImage.objects.filter(file=view.kwargs.get('file')).first() or ImageVersion.objects.filter(file=view.kwargs.get('file')).first()
+        image = OriginalImage.objects.filter(file=view.kwargs.get('file')).first() or ImageVersion.objects.filter(
+            file=view.kwargs.get('file')).first()
         if image:
             if hasattr(image, 'owner'):
                 return image.owner == request.user
@@ -21,6 +22,7 @@ class AccountTierPermission(permissions.BasePermission):
     """
     Permission allowing only to see images appropriate to the tier of account
     """
+
     def has_permission(self, request, view):
         image = OriginalImage.objects.filter(file=view.kwargs.get('file')).first()
         if image:
@@ -32,6 +34,7 @@ class ExpiringLinkPermissionOrReadOnly:
     """
     Permission allowing to create expiring links or seeing image
     """
+
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
             return True

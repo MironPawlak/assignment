@@ -1,11 +1,8 @@
 from django.core.files.images import ImageFile
-from django.utils.crypto import get_random_string
 from rest_framework import serializers
 from .models import OriginalImage, ImageVersion, ExpiringLink
-from django.utils import timezone
 from PIL import Image
 import io
-import datetime
 
 
 class ImageVersionSerializer(serializers.ModelSerializer):

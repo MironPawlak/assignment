@@ -1,7 +1,6 @@
-from django.conf import settings
 from django.core.management import call_command
 from django.test import TestCase
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse
 from django.contrib.auth import get_user_model
 from accounts.models import OriginalImage, AccountTier
 from django.core.files.images import ImageFile
