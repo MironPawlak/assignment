@@ -7,7 +7,7 @@ class Command(BaseCommand):
     def __init__(self, *args, **kwargs):
         super(Command, self).__init__(*args, **kwargs)
 
-    help = "Create basic tiers nad superuser only if it doesn't exists"
+    help = "Create basic tiers and superuser only if it doesn't exists"
 
     def handle(self, *args, **options):
         if AccountTier.objects.filter(name='Basic').exists() or AccountTier.objects.filter(name='Premium').exists():

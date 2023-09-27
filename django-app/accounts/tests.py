@@ -1,11 +1,14 @@
+import io
+from PIL import Image
 from django.core.management import call_command
+from django.core.files.images import ImageFile
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from accounts.models import OriginalImage, AccountTier
-from django.core.files.images import ImageFile
-from PIL import Image
-import io
+
+
+
 
 
 class UserAuthenticationTest(TestCase):

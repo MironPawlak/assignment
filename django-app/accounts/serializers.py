@@ -1,8 +1,8 @@
+import io
+from PIL import Image
 from django.core.files.images import ImageFile
 from rest_framework import serializers
 from .models import OriginalImage, ImageVersion, ExpiringLink
-from PIL import Image
-import io
 
 
 class ImageVersionSerializer(serializers.ModelSerializer):
